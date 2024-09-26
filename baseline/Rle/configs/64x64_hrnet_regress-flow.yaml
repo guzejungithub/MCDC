@@ -1,0 +1,121 @@
+DATASET:
+  TRAIN:
+    TYPE: 'Mscoco'
+    ROOT: '/data/coco'
+    IMG_PREFIX: 'train2017'
+    ANN: '/data/coco/annotations/person_keypoints_train2017.json'
+    AUG:
+      FLIP: true
+      ROT_FACTOR: 45
+      SCALE_FACTOR: 0.25
+      NUM_JOINTS_HALF_BODY: 3
+      PROB_HALF_BODY: 0.3
+  VAL:
+    TYPE: 'Mscoco'
+    ROOT: '/data/coco'
+    IMG_PREFIX: 'val2017'
+    ANN: '/data/coco/annotations/person_keypoints_val2017.json'
+  TEST:
+    TYPE: 'Mscoco_det'
+    ROOT: './data/coco/'
+    IMG_PREFIX: 'val2017'
+    DET_FILE: './exp/json/test_det_rcnn.json'
+    ANN: '/data/coco/annotations/person_keypoints_val2017.json'
+DATA_PRESET:
+  TYPE: 'simple'
+  SIGMA: 1
+  NUM_JOINTS: 17
+  IMAGE_SIZE:
+  - 64
+  - 64
+  HEATMAP_SIZE:
+  - 16
+  - 16
+MODEL:
+  TYPE: 'RegressFlow'
+  PRETRAINED: '/hrnet_w48-8ef0771d.pth'
+  TRY_LOAD: ''
+  NUM_FC_FILTERS:
+  - -1
+  HIDDEN_LIST: -1
+  NUM_LAYERS: 50
+  INIT_WEIGHTS: true
+  NAME: pose_hrnet
+  NUM_JOINTS: 17
+  # PRETRAINED: 'models/pytorch/imagenet/hrnet_w32-36af842e.pth'
+  TARGET_TYPE: gaussian
+  IMAGE_SIZE:
+  - 64
+  - 64
+  HEATMAP_SIZE:
+  - 16
+  - 16
+  SIGMA: 1
+  EXTRA:
+    PRETRAINED_LAYERS:
+    - 'conv1'
+    - 'bn1'
+    - 'conv2'
+    - 'bn2'
+    - 'layer1'
+    - 'transition1'
+    - 'stage2'
+    - 'transition2'
+    - 'stage3'
+    - 'transition3'
+    - 'stage4'
+    FINAL_CONV_KERNEL: 1
+    STAGE2:
+      NUM_MODULES: 1
+      NUM_BRANCHES: 2
+      BLOCK: BASIC
+      NUM_BLOCKS:
+      - 4
+      - 4
+      NUM_CHANNELS:
+      - 48
+      - 96
+      FUSE_METHOD: SUM
+    STAGE3:
+      NUM_MODULES: 4
+      NUM_BRANCHES: 3
+      BLOCK: BASIC
+      NUM_BLOCKS:
+      - 4
+      - 4
+      - 4
+      NUM_CHANNELS:
+      - 48
+      - 96
+      - 192
+      FUSE_METHOD: SUM
+    STAGE4:
+      NUM_MODULES: 3
+      NUM_BRANCHES: 4
+      BLOCK: BASIC
+      NUM_BLOCKS:
+      - 4
+      - 4
+      - 4
+      - 4
+      NUM_CHANNELS:
+      - 48
+      - 96
+      - 192
+      - 384
+      FUSE_METHOD: SUM
+LOSS:
+  TYPE: 'RLELoss'
+TEST:
+  HEATMAP2COORD: 'coord'
+TRAIN:
+  WORLD_SIZE: 8
+  BATCH_SIZE: 32
+  BEGIN_EPOCH: 0
+  END_EPOCH: 270
+  OPTIMIZER: 'adam'
+  LR: 0.001
+  LR_FACTOR: 0.1
+  LR_STEP:
+  - 170
+  - 200
