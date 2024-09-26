@@ -9,3 +9,17 @@ For MGIL, its environment configuration and training method are consistent with 
 
 
 Train the teacher model before training the student model. Follow the training guidelines of Simcc for the teacher model. Before training the student model, modify the path of the teacher model in the configuration file.
+
+## Train
+To train a model for COCO or MPII datasets, run:
+
+``` python tools/train.py --cfg experiments/coco/hrnet/w32_64x64_adam_lr1e-3.yaml ```
+
+
+## Test
+To test a model for COCO or MPII datasets, run:
+
+``` python tools/test.py --cfg experiments/coco/hrnet/w32_64x64_adam_lr1e-3.yaml ```
+
+
+
