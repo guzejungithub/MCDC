@@ -1,7 +1,7 @@
 
 #!/usr/bin/env bash
 #PROXYCHAINS=proxychains4
-
+ 
 TORCH_VER=1.0.1
 TORCHVISION_VER=0.3.0
 
